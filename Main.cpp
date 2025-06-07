@@ -1,3 +1,8 @@
+// Daniel Mota
+//06.06.2025
+//This program is basically a simplified blackjack program, where the player starts with a certain set of cards and has to
+//stand with more than the dealer, if the player goes over 21, they bust and the dealer wins, and vice versa
+
 #include <iostream>
 using namespace std;
 
