@@ -5,18 +5,30 @@ using namespace std;
 //your job is to fix this object
 class Card { // Keeps a card object
 public:
-  //put the constructors and getters and setters here
+
+Card(string argSuit = "", string argRank = "", int argValue = 0) {
+        suit = argSuit;
+        rank = argRank;
+        value = argValue;
+}
+
+  int get_value() { return value; } // getter and setter
+  void set_value(string);
+
+
+void print_card() { // prints the rank and suit of card when told to
+        cout << rank << " of " << suit << endl;
+    }
 
 private:
-  //put data variables here, look below to see what data variables you should have
+
+string suit, rank;
+int value;
 };
 
-//define your getters and setters here
-
-//the rest of the code is working code - if you define your object above
+//the rest of the code is working code
 const string SUITS[] = {"Hearts", "Diamonds", "Clubs", "Spades"};
-const string RANKS[] = {"2", "3",  "4",    "5",     "6",    "7",  "8",
-                        "9", "10", "Jack", "Queen", "King", "Ace"};
+const string RANKS[] = {"2", "3",  "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
 const int VALUES[] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11};
 
 // int DECK[52];
