@@ -1,8 +1,6 @@
 #include <iostream>
-
 using namespace std;
 
-//your job is to fix this object
 class Card { // Keeps a card object
 public:
 
@@ -12,26 +10,21 @@ Card(string argSuit = "", string argRank = "", int argValue = 0) {
         value = argValue;
 }
 
-  int get_value() { return value; } // getter and setter
-  void set_value(string);
-
-
+  int get_value() { return value; }
 void print_card() { // prints the rank and suit of card when told to
         cout << rank << " of " << suit << endl;
     }
-
 private:
 
 string suit, rank;
 int value;
 };
 
-//the rest of the code is working code
+//the rest of the code:
 const string SUITS[] = {"Hearts", "Diamonds", "Clubs", "Spades"};
 const string RANKS[] = {"2", "3",  "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
 const int VALUES[] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11};
 
-// int DECK[52];
 Card deck[52];
 int currentCardIndex = 0;
 /*
@@ -75,13 +68,19 @@ int dealInitialPlayerCards() {
   cout << "Your cards: ";
   card1.print_card();
   card2.print_card();
-  //cout << "Your cards: " << RANKS[card1 % 13] << " of " << SUITS[card1 / 13]
-     //<< " and " << RANKS[card2 % 13] << " of " << SUITS[card2 / 13] << endl;
+
   return card1.get_value() + card2.get_value();
-  //return cardValue(card1) + cardValue(card2);
 }
 
-int playerTurn(int playerTotal) {
+int dealInitialDealerCards() { //This was added to give the dealer's starting card, as the dealer didn't do anything before and only won when the player busted
+  Card card1 = dealCard();
+  int dealerTotal = card1.get_value();
+  cout << "Dealer's card: ";
+  card1.print_card();
+  return dealerTotal;
+}
+
+int playerTurn(int playerTotal) { //Handles the player's turn, lets them hit or stand, and ensures that they don't enter any other input
   while (true) {
     cout << "Your total is " << playerTotal << ". Do you want to hit or stand?"
          << endl;
@@ -89,12 +88,9 @@ int playerTurn(int playerTotal) {
     getline(cin, action);
     if (action == "hit") {
       Card newCard = dealCard();
-      //playerTotal += cardValue(newCard);
       playerTotal += newCard.get_value();
       cout << "You drew a ";
       newCard.print_card();
-      //cout << "You drew a " << RANKS[newCard % 13] << " of "
-           //<< SUITS[newCard / 13] << endl;
       if (playerTotal > 21) {
         break;
       }
@@ -108,20 +104,41 @@ int playerTurn(int playerTotal) {
 }
 
 
+int dealerTurn(int dealerTotal) { //This was added to allow the dealer to act, and to stick when the total is above 18
+    while (dealerTotal < 18) {
+        Card newCard = dealCard();
+        cout << "Dealer draws: ";
+        newCard.print_card();
+        dealerTotal += newCard.get_value();
+    }
+    return dealerTotal;
+  }
+
 int main() {
   initializeDeck();
-  //printDeck();
   shuffleDeck();
- //printDeck();
 
   int playerTotal = dealInitialPlayerCards();
+  int dealerTotal = dealInitialDealerCards(); // Added so dealer has an initial card
+  
   cout << "The playerTotal is " << playerTotal << endl;
-  //int dealerTotal = dealInitialDealerCards();
 
-  playerTotal = playerTurn(playerTotal);
+  playerTotal = playerTurn(playerTotal); //Added some win/lose conditions so the player can, well, win/lose
   if (playerTotal > 21) {
     cout << "You busted! Dealer wins." << endl;
-    return 0;
-  } 
-  
+  } else {
+      dealerTotal = dealerTurn(dealerTotal);
+      cout << "Dealer's total: " << dealerTotal << endl;
+      
+      if (dealerTotal > 21) {
+          cout << "Dealer busted, you win!" << endl;
+      } else if (dealerTotal > playerTotal) {
+          cout << "Dealer wins." << endl;
+       } else if (dealerTotal < playerTotal) {
+          cout << "You win!" << endl;
+      } else {
+          cout << "It's a draw." << endl;
+      }
+  }
+  return 0;
 }
